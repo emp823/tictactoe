@@ -1,0 +1,9 @@
+{
+  "max_line_length": {
+    "level": "warn",
+    "value": 90
+  },
+  "no_trailing_whitespace": {
+    "level": "error"
+  }
+}
