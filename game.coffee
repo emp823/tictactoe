@@ -7,7 +7,7 @@ document.addEventListener 'DOMContentLoaded', ->
   cells = document.querySelectorAll('.cell')
   status = document.getElementById('status')
 
-  checkWin = ->
+  checkWin = (board) ->
     winPatterns = [
       [0, 1, 2]
       [3, 4, 5]
@@ -29,19 +29,45 @@ document.addEventListener 'DOMContentLoaded', ->
 
     return null
 
-  handleClick = (event) ->
-    index = event.target.dataset.cell
+  aiMove = (board) ->
+    emptyIndices = (index for index, cell of board when cell is null)
 
-    return if gameOver or board[index]
+    for player in ['O', 'X']
+      for index in emptyIndices
+        newBoard = board.slice()
+        newBoard[index] = player
+        if checkWin(newBoard) is player
+          return index
 
-    board[index] = currentPlayer
-    event.target.textContent = currentPlayer
+    if emptyIndices.length > 0
+      randomIndex = emptyIndices[Math.floor(Math.random() * emptyIndices.length)]
+      return randomIndex
+    else
+      return null
 
-    winner = checkWin()
+  updateBoard = (board, index, player) ->
+    newBoard = board.slice()
+    newBoard[index] = player
+    return newBoard
+
+  makeMove = (index) ->
+    return if gameOver or index is null or board[index] isnt null
+
+    board = updateBoard(board, index, currentPlayer)
+    cells[index].textContent = currentPlayer
+
+    winner = checkWin(board)
     if winner
       gameOver = true
       status.textContent = if winner is 'Draw' then 'It\'s a draw!' else "#{winner} wins!"
     else
       currentPlayer = if currentPlayer is 'X' then 'O' else 'X'
+      if currentPlayer is 'O' and not gameOver
+        aiIndex = aiMove(board)
+        makeMove(aiIndex)
+
+  handleClick = (event) ->
+    index = parseInt(event.target.dataset.cell)
+    makeMove(index)
 
   cell.addEventListener 'click', handleClick for cell in cells
