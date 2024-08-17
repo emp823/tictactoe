@@ -3,24 +3,28 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "build": "coffee --compile --output . game.coffee",
-    "lint:js": "coffeelint game.coffee",
+    "build": "webpack --mode production",
+    "lint:js": "coffeelint ./src/game.coffee",
     "lint:css": "stylelint 'style.css'",
     "lint:html": "htmlhint index.html",
     "lint": "npm run lint:js && npm run lint:css && npm run lint:html",
     "start": "open ./index.html",
-    "watch": "nodemon --exec npm run build --watch game.coffee"
+    "watch": "nodemon --exec npm run build --watch ./src/game.coffee"
   },
   "keywords": [],
-  "author": "",
+  "author": "Erik Pearson",
   "license": "ISC",
   "devDependencies": {
+    "coffee-loader": "^5.0.0",
     "coffeelint": "^2.1.0",
     "coffeescript": "^2.7.0",
     "htmlhint": "^1.1.4",
     "nodemon": "^3.1.4",
     "stylelint": "^16.8.1",
-    "stylelint-config-standard": "^36.0.1"
+    "stylelint-config-standard": "^36.0.1",
+    "webpack": "^5.93.0",
+    "webpack-cli": "^5.1.4"
   }
 }
